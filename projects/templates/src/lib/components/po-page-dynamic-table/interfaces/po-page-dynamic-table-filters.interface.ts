@@ -1,6 +1,8 @@
 import { PoPageDynamicTableField } from '../../..';
 
 /**
+ * @docsExtends PoPageDynamicTableField
+ *
  * @usedBy PoPageDynamicTableComponent
  *
  * @description

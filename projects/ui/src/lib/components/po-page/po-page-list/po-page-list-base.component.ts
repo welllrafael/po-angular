@@ -25,6 +25,8 @@ export const poPageListLiteralsDefault = {
 };
 
 /**
+ * @docsExtends PoPageDefaultBaseComponent
+ *
  * @description
  *
  * O componente `po-page-list` é utilizado como o container principal para as telas de listagem de dados,
@@ -44,15 +46,6 @@ export abstract class PoPageListBaseComponent extends PoPageDefaultBaseComponent
 
   protected language: string;
   protected resizeListener: () => void;
-
-  /**
-   * @optional
-   *
-   * @description
-   *
-   * Objeto que implementa as propriedades da interface `PoBreadcrumb`.
-   */
-  @Input('p-breadcrumb') breadcrumb?: PoBreadcrumb;
 
   /**
    * @optional

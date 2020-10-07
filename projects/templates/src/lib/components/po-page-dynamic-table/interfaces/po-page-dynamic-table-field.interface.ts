@@ -1,6 +1,8 @@
 import { PoDynamicFormField } from '@po-ui/ng-components';
 
 /**
+ * @docsExtends PoDynamicFormField
+ *
  * @usedBy PoPageDynamicTableComponent
  *
  * @description

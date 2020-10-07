@@ -7,15 +7,28 @@ module.exports = {
     classDoc.methods = [];
 
     //Extends
+    const resolvePropertiesRecursive = (classDoc, properties) => {
+      if (classDoc.docsExtends) {
+        let extendedDoc = allDocs.filter(doc => doc.name == classDoc.docsExtends)[0];
+
+        properties = resolvePropertiesRecursive(extendedDoc, properties);
+      }
+
+      properties = properties.concat(this.resolveProperties(classDoc));
+
+      return properties;
+    }
+
     if (classDoc.docsExtends) {
       let extendedDoc = allDocs.filter(doc => doc.name == classDoc.docsExtends)[0];
 
       if (extendedDoc) {
         let description = classDoc.description;
 
-        classDoc.description = `${extendedDoc.description} ${description}`;
-        classDoc.properties = this.resolveProperties(extendedDoc);
+        // VERIFICAR A HERANÇA DA DOC..
+        classDoc.properties = resolvePropertiesRecursive(extendedDoc, []);// this.resolveProperties(extendedDoc);
         classDoc.methods = this.resolveMethods(extendedDoc);
+        classDoc.description = `${extendedDoc.description} ${description}`;
       } else {
         console.warn(`Classe ${classDoc.docsExtends} extended by ${classDoc.name} não encontrada!`.red);
       }
@@ -77,6 +90,7 @@ module.exports = {
 
   /** Function that walks through all inherited docs and collects public properties. */
   resolveProperties: function (classDoc) {
+    // console.log('class doc mebers resolve properties:: ', classDoc.members)
     let properties = classDoc.members.filter(member => !member.hasOwnProperty('parameters'));
 
     properties.forEach(function (property, index) {
@@ -90,6 +104,8 @@ module.exports = {
 
     properties = properties.filter(property => property.description && property.type);
 
+
+    // console.log('class inherits properties:: ', properties)
     return properties ? properties : [];
   },
 
