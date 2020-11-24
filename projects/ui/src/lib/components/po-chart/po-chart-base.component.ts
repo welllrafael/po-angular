@@ -2,6 +2,7 @@ import { EventEmitter, Input, Output, Directive } from '@angular/core';
 
 import { convertToInt, isTypeof } from '../../utils/util';
 
+import { PoBarChartSeries } from './interfaces/po-chart-bar-series.interface';
 import { PoChartGaugeSerie } from './po-chart-types/po-chart-gauge/po-chart-gauge-series.interface';
 import { PoChartType } from './enums/po-chart-type.enum';
 import { PoColumnChartSeries } from './interfaces/po-chart-column-series.interface';
@@ -15,7 +16,7 @@ const poChartMinHeight = 200;
 const poChartTypeDefault = PoChartType.Pie;
 
 export type PoChartSeries = Array<
-  PoDonutChartSeries | PoPieChartSeries | PoChartGaugeSerie | PoLineChartSeries | PoColumnChartSeries
+  PoDonutChartSeries | PoPieChartSeries | PoChartGaugeSerie | PoLineChartSeries | PoBarChartSeries | PoColumnChartSeries
 >;
 
 /**
@@ -40,7 +41,7 @@ export abstract class PoChartBaseComponent {
   private _categories: Array<string>;
   private _height: number;
   private _series:
-    | Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries | PoColumnChartSeries>
+    | Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries | PoBarChartSeries | PoColumnChartSeries>
     | PoChartGaugeSerie;
   private _type: PoChartType = poChartTypeDefault;
 
@@ -90,7 +91,9 @@ export abstract class PoChartBaseComponent {
    * Define os elementos do gráfico que serão criados dinamicamente.
    */
   @Input('p-series') set series(
-    value: PoChartGaugeSerie | Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries | PoColumnChartSeries>
+    value:
+      | PoChartGaugeSerie
+      | Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries | PoBarChartSeries | PoColumnChartSeries>
   ) {
     this._series = value || [];
 
