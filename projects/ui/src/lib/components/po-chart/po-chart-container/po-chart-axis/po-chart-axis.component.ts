@@ -172,7 +172,7 @@ export class PoChartAxisComponent {
     const amountOfAxisX = type === PoChartType.Bar ? seriesLength : axisXGridLines;
 
     this.calculateAxisXCoordinates(amountOfAxisX, containerSize, type);
-    this.calculateAxisXLabelCoordinates(amountOfAxisX, this.containerSize, this.minMaxAxisValues, type);
+    this.calculateAxisXLabelCoordinates(amountOfAxisX, containerSize, minMaxAxisValues, type);
   }
 
   private setAxisYCoordinates(
@@ -355,11 +355,11 @@ export class PoChartAxisComponent {
     const xRatio = index / amountOfLines;
 
     if (type === PoChartType.Bar) {
-      return PoChartAxisXLabelArea + (containerSize.svgPlottingAreaWidth + PoChartPadding * 2) * xRatio;
+      return Math.round(PoChartAxisXLabelArea + (containerSize.svgPlottingAreaWidth + PoChartPadding * 2) * xRatio);
     }
 
     const halfCategoryWidth = (containerSize.svgWidth - PoChartAxisXLabelArea) / amountOfAxisY / 2;
-    return (
+    return Math.round(
       PoChartAxisXLabelArea + halfCategoryWidth + (containerSize.svgPlottingAreaWidth + PoChartPadding * 2) * xRatio
     );
   }
@@ -369,7 +369,7 @@ export class PoChartAxisComponent {
     const xRatio = isNaN(divideIndexBySeriesLength) ? 0 : divideIndexBySeriesLength;
     const svgAxisSideSpacing = this.mathsService.calculateSideSpacing(containerSize.svgWidth, this.seriesLength);
 
-    return PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
+    return Math.round(PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio);
   }
 
   private calculateAxisYCoordinateX(
@@ -382,7 +382,7 @@ export class PoChartAxisComponent {
     const divideIndexByAmountOfLines = index / amountOfLines;
     const xRatio = divideIndexByAmountOfLines === Infinity ? 0 : divideIndexByAmountOfLines;
 
-    return PoChartAxisXLabelArea + (containerSize.svgPlottingAreaWidth + PoChartPadding * 2) * xRatio;
+    return Math.round(PoChartAxisXLabelArea + (containerSize.svgPlottingAreaWidth + PoChartPadding * 2) * xRatio);
   }
 
   private checkAxisOptions(options: PoChartAxisOptions = {}): void {
@@ -424,25 +424,28 @@ export class PoChartAxisComponent {
   }
 
   private getAxisXLabels(type: PoChartType, minMaxAxisValues: PoChartMinMaxValues, amountOfAxisX: number) {
-    return type === PoChartType.Bar
-      ? this.formatCategoriesLabels(amountOfAxisX).reverse()
-      : this.generateAverageOfLabels(minMaxAxisValues, amountOfAxisX);
+    if (type === PoChartType.Bar) {
+      const axisXLabelsList = this.formatCategoriesLabels(amountOfAxisX, this.categories);
+      return axisXLabelsList.reverse();
+    }
+
+    return this.generateAverageOfLabels(minMaxAxisValues, amountOfAxisX);
   }
 
   private getAxisYLabels(type: PoChartType, minMaxAxisValues: PoChartMinMaxValues, amountOfAxisX: number) {
     return type === PoChartType.Bar
       ? this.generateAverageOfLabels(minMaxAxisValues, amountOfAxisX)
-      : this.formatCategoriesLabels(amountOfAxisX);
+      : this.formatCategoriesLabels(amountOfAxisX, this.categories);
   }
 
-  private formatCategoriesLabels(amountOfAxisX: number) {
+  private formatCategoriesLabels(amountOfAxisX: number, categories: Array<string> = []) {
     return [...Array(amountOfAxisX)].map((_, index: number) => {
-      return this.categories[index] ?? '-';
+      return categories[index] ?? '-';
     });
   }
 
-  private generateAverageOfLabels(minMaxAxisValues: PoChartMinMaxValues, amountOfAxisX: number) {
-    const averageLabelsList = this.mathsService.range(minMaxAxisValues, amountOfAxisX);
+  private generateAverageOfLabels(minMaxAxisValues: PoChartMinMaxValues, amountOfAxisLines: number) {
+    const averageLabelsList = this.mathsService.range(minMaxAxisValues, amountOfAxisLines);
 
     return averageLabelsList.map(label => {
       const formattedDigit = label.toFixed(label % 1 && 2);
