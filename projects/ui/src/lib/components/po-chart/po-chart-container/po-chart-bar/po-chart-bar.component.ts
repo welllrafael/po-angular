@@ -56,7 +56,7 @@ export class PoChartBarComponent extends PoChartBarBaseComponent {
     const spaceBetweenBars = this.series.length > 1 ? columnFraction / (this.series.length + 2) : 0;
 
     // Subtrai a fração das séries pelo espaço entre as colunas.
-    const barHeight = columnFraction - spaceBetweenBars / (this.series.length + 2);
+    const barHeight = columnFraction - (spaceBetweenBars * (this.series.length - 1)) / (this.series.length + 2);
 
     return { svgPlottingAreaWidth, barHeight, spaceBetweenBars };
   }
