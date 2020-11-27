@@ -75,6 +75,7 @@ export class PoChartAxisComponent {
       );
     } else {
       this._series = [];
+      this.cleanUpCoordinates();
     }
   }
 
@@ -169,10 +170,20 @@ export class PoChartAxisComponent {
     minMaxAxisValues: PoChartMinMaxValues,
     type: PoChartType
   ) {
-    const amountOfAxisX = type === PoChartType.Bar ? seriesLength : axisXGridLines;
+    const amountOfAxisXLines = this.amountOfAxisXLines(seriesLength, axisXGridLines, type);
+    this.calculateAxisXCoordinates(amountOfAxisXLines, containerSize);
 
-    this.calculateAxisXCoordinates(amountOfAxisX, containerSize, type);
-    this.calculateAxisXLabelCoordinates(amountOfAxisX, containerSize, minMaxAxisValues, type);
+    if (seriesLength) {
+      const amountOfAxisLabels = type === PoChartType.Bar ? seriesLength : axisXGridLines;
+      this.calculateAxisXLabelCoordinates(amountOfAxisLabels, containerSize, minMaxAxisValues, type);
+    }
+  }
+
+  private amountOfAxisXLines(seriesLength: number, axisXGridLines: number, type: PoChartType): number {
+    if (type === PoChartType.Bar) {
+      return seriesLength <= 1 ? 2 : seriesLength + 1;
+    }
+    return axisXGridLines === 0 ? 1 : axisXGridLines;
   }
 
   private setAxisYCoordinates(
@@ -185,16 +196,17 @@ export class PoChartAxisComponent {
     const amountOfAxisY = type === PoChartType.Bar ? axisXGridLines : seriesLength;
 
     this.calculateAxisYCoordinates(amountOfAxisY, containerSize, type);
-    this.calculateAxisYLabelCoordinates(amountOfAxisY, containerSize, minMaxAxisValues, type);
+
+    if (seriesLength) {
+      this.calculateAxisYLabelCoordinates(amountOfAxisY, containerSize, minMaxAxisValues, type);
+    }
   }
 
-  private calculateAxisXCoordinates(amountOfAxisX: number, containerSize: PoChartContainerSize, type: PoChartType) {
-    const length = amountOfAxisX === 0 || type === PoChartType.Bar ? amountOfAxisX + 1 : amountOfAxisX;
-
-    this.axisXCoordinates = [...Array(length)].map((_, index: number) => {
+  private calculateAxisXCoordinates(amountOfAxisX: number, containerSize: PoChartContainerSize) {
+    this.axisXCoordinates = [...Array(amountOfAxisX)].map((_, index: number) => {
       const startX = PoChartAxisXLabelArea;
       const endX = containerSize.svgWidth;
-      const yCoordinate = this.calculateAxisXCoordinateY(amountOfAxisX, containerSize, type, index);
+      const yCoordinate = this.calculateAxisXCoordinateY(amountOfAxisX, containerSize, index);
 
       const coordinates = `M${startX} ${yCoordinate} L${endX}, ${yCoordinate}`;
 
@@ -325,14 +337,8 @@ export class PoChartAxisComponent {
     );
   }
 
-  private calculateAxisXCoordinateY(
-    amountOfAxisX: number,
-    containerSize: PoChartContainerSize,
-    type: PoChartType,
-    index: number
-  ): number {
-    const amountOfLines = type === PoChartType.Bar ? amountOfAxisX : amountOfAxisX - 1;
-    const yRatio = index / amountOfLines;
+  private calculateAxisXCoordinateY(amountOfAxisX: number, containerSize: PoChartContainerSize, index: number): number {
+    const yRatio = index / (amountOfAxisX - 1);
 
     return (
       containerSize.svgPlottingAreaHeight - containerSize.svgPlottingAreaHeight * yRatio + PoChartPlotAreaPaddingTop
@@ -417,6 +423,14 @@ export class PoChartAxisComponent {
       ...minMaxSeriesValues,
       ...minMaxUpdatedValues
     };
+  }
+
+  private cleanUpCoordinates() {
+    this.axisXCoordinates = [];
+    this.axisYCoordinates = [];
+    this.axisXLabelCoordinates = [];
+    this.axisYLabelCoordinates = [];
+    this.seriesLength = 0;
   }
 
   private isValidGridLinesLengthOption(axisXGridLines: number): boolean {
