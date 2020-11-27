@@ -315,7 +315,7 @@ describe('PoChartAxisComponent', () => {
 
       component['setAxisXCoordinates'](axisXGridLines, seriesLength, containerSize, minMaxAxisValues, type);
 
-      expect(spyCalculateAxisXCoordinates).toHaveBeenCalledWith(seriesLength, containerSize, type);
+      expect(spyCalculateAxisXCoordinates).toHaveBeenCalledWith(seriesLength + 1, containerSize);
       expect(spyCalculateAxisXLabelCoordinates).toHaveBeenCalledWith(
         seriesLength,
         containerSize,
@@ -346,7 +346,7 @@ describe('PoChartAxisComponent', () => {
 
       component['setAxisXCoordinates'](axisXGridLines, seriesLength, containerSize, minMaxAxisValues, type);
 
-      expect(spyCalculateAxisXCoordinates).toHaveBeenCalledWith(axisXGridLines, containerSize, type);
+      expect(spyCalculateAxisXCoordinates).toHaveBeenCalledWith(axisXGridLines, containerSize);
       expect(spyCalculateAxisXLabelCoordinates).toHaveBeenCalledWith(
         axisXGridLines,
         containerSize,
@@ -646,7 +646,7 @@ describe('PoChartAxisComponent', () => {
     });
 
     it('calculateAxisXCoordinateY: should return the calculation result considering that type is Bar', () => {
-      const expectedResult = 232;
+      const expectedResult = 218;
       const amountOfAxisX = 5;
       const fakeContainerSize = {
         svgWidth: 500,
@@ -657,9 +657,8 @@ describe('PoChartAxisComponent', () => {
         svgPlottingAreaHeight: 280
       };
       const fakeIndex = 1;
-      const type = PoChartType.Bar;
 
-      const result = component['calculateAxisXCoordinateY'](amountOfAxisX, fakeContainerSize, type, fakeIndex);
+      const result = component['calculateAxisXCoordinateY'](amountOfAxisX, fakeContainerSize, fakeIndex);
 
       expect(result).toEqual(expectedResult);
     });
@@ -676,9 +675,8 @@ describe('PoChartAxisComponent', () => {
         svgPlottingAreaHeight: 280
       };
       const fakeIndex = 1;
-      const type = PoChartType.Line;
 
-      const result = component['calculateAxisXCoordinateY'](amountOfAxisX, fakeContainerSize, type, fakeIndex);
+      const result = component['calculateAxisXCoordinateY'](amountOfAxisX, fakeContainerSize, fakeIndex);
 
       expect(result).toEqual(expectedResult);
     });
@@ -1015,6 +1013,15 @@ describe('PoChartAxisComponent', () => {
         expect(spyFormatCategoriesLabels).toHaveBeenCalledWith(amountOfAxisX, component.categories);
       });
 
+      it('formatCategoriesLabels: should return an array with 2 items', () => {
+        const amountOfAxisX = 2;
+        const categories = undefined;
+
+        const expectedResult = component['formatCategoriesLabels'](amountOfAxisX, categories);
+
+        expect(expectedResult).toEqual(['-', '-']);
+      });
+
       it('getAxisXLabels: should call `generateAverageOfLabels` if type isn`t `Bar`', () => {
         const type = PoChartType.Column;
         const minMaxAxisValues: PoChartMinMaxValues = { minValue: 1, maxValue: 3 };
@@ -1027,7 +1034,7 @@ describe('PoChartAxisComponent', () => {
         expect(spyGenerateAverageOfLabels).toHaveBeenCalledWith(minMaxAxisValues, amountOfAxisX);
       });
 
-      it('calculateAxisXCoordinates: should call calculateAxisXCoordinateY 3 times if type is Bar', () => {
+      it('calculateAxisXCoordinates: should call calculateAxisXCoordinateY twice if type is Bar', () => {
         const amountOfAxisX = 2;
         const containerSize = {
           svgWidth: 500,
@@ -1037,13 +1044,11 @@ describe('PoChartAxisComponent', () => {
           svgPlottingAreaWidth: 400,
           svgPlottingAreaHeight: 280
         };
-        const type = PoChartType.Bar;
-
         const spyCalculateAxisXCoordinateY = spyOn(component, <any>'calculateAxisXCoordinateY').and.callThrough();
 
-        component['calculateAxisXCoordinates'](amountOfAxisX, containerSize, type);
+        component['calculateAxisXCoordinates'](amountOfAxisX, containerSize);
 
-        expect(spyCalculateAxisXCoordinateY).toHaveBeenCalledTimes(3);
+        expect(spyCalculateAxisXCoordinateY).toHaveBeenCalledTimes(2);
       });
 
       it('calculateAxisXCoordinates: should call calculateAxisXCoordinateY twice if type isn`t Bar', () => {
@@ -1056,13 +1061,52 @@ describe('PoChartAxisComponent', () => {
           svgPlottingAreaWidth: 400,
           svgPlottingAreaHeight: 280
         };
-        const type = PoChartType.Column;
 
         const spyCalculateAxisXCoordinateY = spyOn(component, <any>'calculateAxisXCoordinateY').and.callThrough();
 
-        component['calculateAxisXCoordinates'](amountOfAxisX, containerSize, type);
+        component['calculateAxisXCoordinates'](amountOfAxisX, containerSize);
 
         expect(spyCalculateAxisXCoordinateY).toHaveBeenCalledTimes(2);
+      });
+
+      it('amountOfAxisXLines: should return `seriesLength` plus 1 if chart type is `Bar` and seriesLength is greater than 1', () => {
+        const seriesLength = 2;
+        const axisXGridLines = 5;
+        const type = PoChartType.Bar;
+
+        const expectedResult = component['amountOfAxisXLines'](seriesLength, axisXGridLines, type);
+
+        expect(expectedResult).toBe(3);
+      });
+
+      it('amountOfAxisXLines: should return `2` if chart type is `Bar` and seriesLength is 1', () => {
+        const seriesLength = 1;
+        const axisXGridLines = 5;
+        const type = PoChartType.Bar;
+
+        const expectedResult = component['amountOfAxisXLines'](seriesLength, axisXGridLines, type);
+
+        expect(expectedResult).toBe(2);
+      });
+
+      it('amountOfAxisXLines: should return `1` if chart type isn`t `Bar` and axisXGridLines value is zero', () => {
+        const seriesLength = 1;
+        const axisXGridLines = 0;
+        const type = PoChartType.Line;
+
+        const expectedResult = component['amountOfAxisXLines'](seriesLength, axisXGridLines, type);
+
+        expect(expectedResult).toBe(1);
+      });
+
+      it('amountOfAxisXLines: should return `axisXGridLines` if chart type isn`t `Bar` and axisXGridLines is different of zero', () => {
+        const seriesLength = 1;
+        const axisXGridLines = 5;
+        const type = PoChartType.Line;
+
+        const expectedResult = component['amountOfAxisXLines'](seriesLength, axisXGridLines, type);
+
+        expect(expectedResult).toBe(5);
       });
     });
   });
