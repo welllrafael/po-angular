@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { PoChartAxisXLabelArea, PoChartPlotAreaPaddingTop } from './../../helpers/po-chart-default-values.constant';
+import { PoChartPlotAreaPaddingTop } from './../../helpers/po-chart-default-values.constant';
 
 import { PoChartBarBaseComponent } from './po-chart-bar-base.component';
 import { PoChartColorService } from './../../services/po-chart-color.service';
@@ -25,13 +25,14 @@ export class PoChartBarComponent extends PoChartBarBaseComponent {
     minMaxSeriesValues: PoChartMinMaxValues,
     serieValue: number
   ) {
-    const { svgWidth, svgPlottingAreaHeight } = containerSize;
+    const { svgWidth, svgPlottingAreaHeight, axisXLabelWidth } = containerSize;
     const { svgPlottingAreaWidth, barHeight, spaceBetweenBars } = this.calculateElementsMeasurements(
       svgWidth,
-      svgPlottingAreaHeight
+      svgPlottingAreaHeight,
+      axisXLabelWidth
     );
 
-    const { x1, x2 } = this.xCoordinates(minMaxSeriesValues, svgPlottingAreaWidth, serieValue);
+    const { x1, x2 } = this.xCoordinates(minMaxSeriesValues, svgPlottingAreaWidth, axisXLabelWidth, serieValue);
     const { y1, y2 } = this.yCoordinates(
       seriesIndex,
       serieItemDataIndex,
@@ -45,10 +46,11 @@ export class PoChartBarComponent extends PoChartBarBaseComponent {
 
   private calculateElementsMeasurements(
     svgWidth: PoChartContainerSize['svgWidth'],
-    svgPlottingAreaHeight: PoChartContainerSize['svgPlottingAreaHeight']
+    svgPlottingAreaHeight: PoChartContainerSize['svgPlottingAreaHeight'],
+    axisXLabelWidth: PoChartContainerSize['axisXLabelWidth']
   ) {
     // Fração das séries em relação à largura da categoria. Incrementa + 2 na extensão das séries pois se trata da área de margem entre as categorias.
-    const svgPlottingAreaWidth = svgWidth - PoChartAxisXLabelArea;
+    const svgPlottingAreaWidth = svgWidth - axisXLabelWidth;
     const categoryHeight = svgPlottingAreaHeight / this.seriesGreaterLength;
     const columnFraction = categoryHeight / (this.series.length + 2);
 
@@ -61,13 +63,18 @@ export class PoChartBarComponent extends PoChartBarBaseComponent {
     return { svgPlottingAreaWidth, barHeight, spaceBetweenBars };
   }
 
-  private xCoordinates(minMaxSeriesValues: PoChartMinMaxValues, svgPlottingAreaWidth: number, serieValue: number) {
+  private xCoordinates(
+    minMaxSeriesValues: PoChartMinMaxValues,
+    svgPlottingAreaWidth: number,
+    axisXLabelWidth: number,
+    serieValue: number
+  ) {
     // TO DO: tratamento para valores negativos.
     const filterNegativeSerieValue = serieValue <= 0 ? 0 : serieValue;
 
     const xRatio = this.mathsService.getSeriePercentage(minMaxSeriesValues, filterNegativeSerieValue);
-    const x1 = PoChartAxisXLabelArea;
-    const x2 = Math.round(svgPlottingAreaWidth * xRatio + PoChartAxisXLabelArea);
+    const x1 = axisXLabelWidth;
+    const x2 = Math.round(svgPlottingAreaWidth * xRatio + axisXLabelWidth);
 
     return { x1, x2 };
   }

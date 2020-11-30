@@ -10,7 +10,8 @@ import {
   OnDestroy,
   ViewChild,
   ViewContainerRef,
-  OnInit
+  OnInit,
+  Renderer2
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
@@ -24,6 +25,8 @@ import { PoChartGaugeComponent } from './po-chart-types/po-chart-gauge/po-chart-
 import { PoChartPieComponent } from './po-chart-types/po-chart-pie/po-chart-pie.component';
 import { PoChartType } from './enums/po-chart-type.enum';
 import { PoChartContainerSize } from './interfaces/po-chart-container-size.interface';
+import { PoChartPadding } from './helpers/po-chart-default-values.constant';
+import { PoChartMathsService } from './services/po-chart-maths.service';
 
 /**
  * @docsExtends PoChartBaseComponent
@@ -75,9 +78,12 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   constructor(
     public changeDetector: ChangeDetectorRef,
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
     private colorService: PoChartColorService,
     private containerService: PoChartSvgContainerService,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private mathsService: PoChartMathsService
   ) {
     super();
   }
@@ -88,6 +94,10 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   get isDynamicComponentType(): boolean {
     return this.type === PoChartType.Gauge || this.type === PoChartType.Donut || this.type === PoChartType.Pie;
+  }
+
+  get hasAxis(): boolean {
+    return this.type === PoChartType.Bar || this.type === PoChartType.Column || this.type === PoChartType.Line;
   }
 
   @HostListener('window:resize')
@@ -139,14 +149,49 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   protected getSvgContainerSize() {
     const { chartHeaderHeight, chartLegendHeight, chartWrapperWidth } = this.getChartMeasurements();
+    let axisXLabelLongestWidth;
+
+    if (this.initialized && this.hasAxis) {
+      if (this.type === PoChartType.Bar && this.categories) {
+        axisXLabelLongestWidth = this.findLongestStringLengthInCategories(this.categories);
+      } else {
+        const minMaxSeriesValue = this.mathsService.calculateMinAndMaxValues(this.chartSeries);
+        axisXLabelLongestWidth = minMaxSeriesValue.maxValue;
+      }
+    }
+
+    const axisXLabelWidth = this.calculateAxisXLongestLength(axisXLabelLongestWidth);
 
     this.svgContainerSize = this.containerService.calculateSVGContainerMeasurements(
       this.height,
       chartWrapperWidth,
       chartHeaderHeight,
       chartLegendHeight,
-      this.categories?.length
+      this.categories?.length,
+      axisXLabelWidth
     );
+  }
+
+  private findLongestStringLengthInCategories(categories) {
+    const categoriesList = [...categories];
+
+    return categoriesList.sort((longest, current) => {
+      return current.length - longest.length;
+    })[0];
+  }
+
+  private calculateAxisXLongestLength(axisXLabel) {
+    const labelPoChartPadding = PoChartPadding / 3;
+    const spanElement = this.renderer.createElement('span');
+
+    this.renderer.addClass(spanElement, 'po-chart-axis-x-label');
+    spanElement.innerHTML = axisXLabel;
+
+    this.renderer.appendChild(this.elementRef.nativeElement, spanElement);
+    const axisXLabelWidth = Math.ceil(spanElement.offsetWidth);
+    this.renderer.removeChild(this.elementRef.nativeElement, spanElement);
+
+    return axisXLabelWidth;
   }
 
   private chartLegendHeight(chartLegend: ElementRef) {

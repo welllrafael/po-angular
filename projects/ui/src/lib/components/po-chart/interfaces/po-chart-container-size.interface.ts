@@ -26,4 +26,7 @@ export interface PoChartContainerSize {
 
   /** Medida da altura do container - padding superior. */
   svgPlottingAreaHeight?: number;
+
+  /** Largura referente ao texto mais longo da série ou categoria para designação de área dos textos do eixo X do grid. */
+  axisXLabelWidth?: number;
 }

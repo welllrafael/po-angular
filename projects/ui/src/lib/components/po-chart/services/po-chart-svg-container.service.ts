@@ -22,13 +22,15 @@ export class PoChartSvgContainerService {
     chartWrapperWidth: number = 0,
     chartHeaderHeight: number = 0,
     chartLegendHeight: number = 0,
-    categoriesLength: number = 0
+    categoriesLength: number = 0,
+    chartAxisXLabelWidth: number = PoChartAxisXLabelArea
   ): PoChartContainerSize {
     const svgWidth = this.svgWidth(chartWrapperWidth);
     const centerX = this.center(chartWrapperWidth);
     const svgHeight = this.svgHeight(chartHeight, chartHeaderHeight, chartLegendHeight);
     const centerY = this.center(svgHeight);
-    const svgPlottingAreaWidth = this.svgPlottingAreaWidth(svgWidth, categoriesLength);
+    const axisXLabelWidth = this.axisXLabelWidth(chartAxisXLabelWidth);
+    const svgPlottingAreaWidth = this.svgPlottingAreaWidth(svgWidth, categoriesLength, axisXLabelWidth);
     const svgPlottingAreaHeight = this.svgPlottingAreaHeight(svgHeight);
 
     return {
@@ -36,9 +38,16 @@ export class PoChartSvgContainerService {
       svgHeight,
       centerX,
       centerY,
+      axisXLabelWidth,
       svgPlottingAreaWidth,
       svgPlottingAreaHeight
     };
+  }
+
+  private axisXLabelWidth(axisXLabelWidth) {
+    const labelPoChartPadding = PoChartPadding / 3;
+
+    return axisXLabelWidth < PoChartAxisXLabelArea ? PoChartAxisXLabelArea : axisXLabelWidth + labelPoChartPadding;
   }
 
   // Largura do container.
@@ -70,11 +79,11 @@ export class PoChartSvgContainerService {
    *
    * > A largura máxima para 'svgAxisSideSpace' é de 48px.
    */
-  private svgPlottingAreaWidth(svgWidth: number, categoriesLength: number) {
-    const categoryWidth = (svgWidth - PoChartAxisXLabelArea) / categoriesLength;
+  private svgPlottingAreaWidth(svgWidth: number, categoriesLength: number, axisXLabelWidth: number) {
+    const categoryWidth = (svgWidth - axisXLabelWidth) / categoriesLength;
     const svgAxisSideSpace = categoryWidth <= PoChartPadding * 2 ? categoryWidth : PoChartPadding * 2;
 
-    return svgWidth - PoChartAxisXLabelArea - svgAxisSideSpace;
+    return svgWidth - axisXLabelWidth - svgAxisSideSpace;
   }
 
   /**

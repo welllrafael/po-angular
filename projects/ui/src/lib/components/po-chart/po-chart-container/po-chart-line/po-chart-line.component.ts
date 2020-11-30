@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
 
-import { PoChartAxisXLabelArea, PoChartPlotAreaPaddingTop } from '../../helpers/po-chart-default-values.constant';
+import { PoChartPlotAreaPaddingTop } from '../../helpers/po-chart-default-values.constant';
 
 import { PoChartColorService } from '../../services/po-chart-color.service';
 import { PoChartMathsService } from '../../services/po-chart-maths.service';
@@ -176,7 +176,7 @@ export class PoChartLineComponent {
     const xRatio = isNaN(divideIndexBySeriesLength) ? 0 : divideIndexBySeriesLength;
     const svgAxisSideSpacing = this.mathsService.calculateSideSpacing(containerSize.svgWidth, this.seriesLength);
 
-    return PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
+    return containerSize.axisXLabelWidth + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
   }
 
   private serieCategory(index: number, categories: Array<string> = []) {
