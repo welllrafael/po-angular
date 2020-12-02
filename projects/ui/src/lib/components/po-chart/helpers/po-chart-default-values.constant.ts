@@ -9,3 +9,5 @@ export const PoChartAxisXGridLines = 5;
 
 // Padding top para área interna de plotagem do grid mais séries para sanar overflow;
 export const PoChartPlotAreaPaddingTop = 8;
+
+export const poChartStartAngle = -Math.PI;

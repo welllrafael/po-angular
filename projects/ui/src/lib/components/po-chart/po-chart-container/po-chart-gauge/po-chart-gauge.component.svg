@@ -1,0 +1,16 @@
+
+<!-- gauge background -->
+<svg:path
+  class="po-chart-gauge-base-path"
+  d="M 0 401.49999999999994 A 401.5 401.5 0 0,1 803 401.5 A 1 1 0 0,1 778.9100000000001 401.5 A 377.41 377.41 0 0,0 24.089999999999975 401.49999999999994 A 1 1 0 0,1 0 401.49999999999994 Z"
+>
+</svg:path> 
+
+
+<svg:path *ngFor="let item of seriesPathsCoordinates; let i = index; trackBy: trackBy"
+  class="po-path-item"
+  fill="#29B6C5"
+  [attr.d]="item.coordinates"
+>
+</svg:path> 
+

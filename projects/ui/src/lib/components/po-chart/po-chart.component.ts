@@ -59,7 +59,6 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   private mappings = {
     [PoChartType.Donut]: PoChartDonutComponent,
-    [PoChartType.Gauge]: PoChartGaugeComponent,
     [PoChartType.Pie]: PoChartPieComponent
   };
 
@@ -87,7 +86,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
   }
 
   get isDynamicComponentType(): boolean {
-    return this.type !== PoChartType.Line;
+    return this.type === PoChartType.Donut || this.type === PoChartType.Pie;
   }
 
   @HostListener('window:resize')

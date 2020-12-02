@@ -25,7 +25,7 @@ export class PoChartSvgContainerService {
     categoriesLength: number = 0
   ): PoChartContainerSize {
     const svgWidth = this.svgWidth(chartWrapperWidth);
-    const centerX = this.center(chartWrapperWidth);
+    const centerX = this.center(svgWidth);
     const svgHeight = this.svgHeight(chartHeight, chartHeaderHeight, chartLegendHeight);
     const centerY = this.center(svgHeight);
     const svgPlottingAreaWidth = this.svgPlottingAreaWidth(svgWidth, categoriesLength);

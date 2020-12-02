@@ -83,12 +83,6 @@ export abstract class PoChartBaseComponent {
    * @description
    *
    * Define os elementos do gráfico que serão criados dinamicamente.
-   *
-   * > A coleção de objetos deve implementar alguma das interfaces abaixo:
-   * - `PoDonutChartSeries`
-   * - `PoPieChartSeries`
-   * - `PoLineChartSeries`
-   * - `PoChartGaugeSerie`
    */
   @Input('p-series') set series(
     value: PoChartGaugeSerie | Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries>
