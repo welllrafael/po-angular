@@ -1,5 +1,5 @@
 <div class="po-gauge-wrapper" [style.height.px]="height">
-  <po-gauge-title [p-title]="title"></po-gauge-title>
+  <po-gauge-title *ngIf="title" [p-title]="title"></po-gauge-title>
   <po-gauge-description
     [p-has-ranges]="hasRanges"
     [p-value]="value"

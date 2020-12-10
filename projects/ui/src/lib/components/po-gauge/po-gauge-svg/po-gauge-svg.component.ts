@@ -43,9 +43,7 @@ export class PoGaugeSvgComponent implements AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
     this.afterViewInit = true;
-
     this.setCoordinates(this.value, this.ranges);
-
     this.changeDetector.detectChanges();
   }
 
