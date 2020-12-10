@@ -9,8 +9,6 @@ import { PoGaugeRanges } from '../interfaces/po-gauge-ranges.interface';
 export class PoGaugeLegendComponent {
   private _ranges: Array<PoGaugeRanges>;
 
-  colors: Array<string> = [];
-
   @Input('p-ranges') set ranges(value: Array<PoGaugeRanges>) {
     if (value.length) {
       this._ranges = this.filterLabel(value);

@@ -41,24 +41,16 @@ export class PoGaugeColorService {
 
     if (length > colorsLength) {
       const quantityDuplicates = length / colorsLength;
-      let colors = PoGaugeColors[colorsLength];
+      let colors = PoGaugeColors[colorsLength - 1];
 
-      for (let i = 1; i <= quantityDuplicates; i++) {
+      for (let i = 0; i <= quantityDuplicates; i++) {
         colors = colors.concat(PoGaugeColors[colorsLength]);
       }
 
       return colors;
     }
 
-    return PoGaugeColors[length];
-  }
-
-  private verifyIfIsPoColorPalette(color: PoGaugeRanges['color']) {
-    if (poGaugeColors.includes(color)) {
-      return `po-${color}`;
-    }
-    return color;
-    return color.startsWith('#') ? color : `#${color}`;
+    return PoGaugeColors[length - 1];
   }
 
   private verifyIfHasColorProperty(ranges: Array<PoGaugeRanges>): void {
@@ -67,5 +59,12 @@ export class PoGaugeColorService {
     if (!hasColorProperty) {
       this.defaultColors = this.getDefaultColors(ranges.length);
     }
+  }
+
+  private verifyIfIsPoColorPalette(color: PoGaugeRanges['color']) {
+    if (poGaugeColors.includes(color)) {
+      return `po-${color}`;
+    }
+    return color;
   }
 }
