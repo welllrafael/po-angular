@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PoGaugeContainerComponent } from './po-gauge-container.component';
+import { PoGaugePathComponent } from './po-gauge-path.component';
 
-describe('PoGaugeContainerComponent', () => {
-  let component: PoGaugeContainerComponent;
-  let fixture: ComponentFixture<PoGaugeContainerComponent>;
+describe('PoGaugePathComponent', () => {
+  let component: PoGaugePathComponent;
+  let fixture: ComponentFixture<PoGaugePathComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PoGaugeContainerComponent]
+      declarations: [PoGaugePathComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PoGaugeContainerComponent);
+    fixture = TestBed.createComponent(PoGaugePathComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

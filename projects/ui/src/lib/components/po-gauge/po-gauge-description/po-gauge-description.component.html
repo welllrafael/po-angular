@@ -1,0 +1,14 @@
+<ng-container *ngIf="hasRanges; then rangesDescription; else percentageDescription"> </ng-container>
+
+<ng-template #rangesDescription>
+  <p class="po-gauge-upper-description">75% da meta de vendas do bimestre</p>
+</ng-template>
+
+<ng-template #percentageDescription>
+  <div *ngIf="hasSerieValue" class="po-chart-gauge-text-content" tabindex="0" [ngStyle]="maxDescriptionWidth">
+    <p class="po-chart-gauge-text-value">p-value</p>
+    <p *ngIf="hasSerieDescription" #description class="po-chart-gauge-text-description" [p-tooltip]="tooltip">
+      p-description
+    </p>
+  </div>
+</ng-template>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { PoChartColors } from '../../po-chart/helpers/po-chart-colors.constant';
+import { PoGaugeColors } from '../po-gauge-colors.constant';
+
 import { PoColorPaletteEnum } from '../../../enums/po-color-palette.enum';
 import { PoGaugeRanges } from '../interfaces/po-gauge-ranges.interface';
 
@@ -21,7 +22,7 @@ export class ColorService {
 
     return ranges.map((range: PoGaugeRanges, index) => {
       if (range.color) {
-        range.color = this.verifyColor(range.color);
+        range.color = this.verifyIfIsPoColorPalette(range.color);
 
         return range;
       }
@@ -33,30 +34,30 @@ export class ColorService {
 
   private getDefaultColors(length: number): Array<string> {
     if (length === 1) {
-      return PoChartColors[0];
+      return PoGaugeColors[0];
     }
 
-    const colorsLength = PoChartColors.length;
+    const colorsLength = PoGaugeColors.length;
 
     if (length > colorsLength) {
       const quantityDuplicates = length / colorsLength;
-      let colors = PoChartColors[colorsLength];
+      let colors = PoGaugeColors[colorsLength];
 
       for (let i = 1; i <= quantityDuplicates; i++) {
-        colors = colors.concat(PoChartColors[colorsLength]);
+        colors = colors.concat(PoGaugeColors[colorsLength]);
       }
 
       return colors;
     }
 
-    return PoChartColors[length];
+    return PoGaugeColors[length];
   }
 
-  private verifyColor(color: PoGaugeRanges['color']) {
+  private verifyIfIsPoColorPalette(color: PoGaugeRanges['color']) {
     if (poGaugeColors.includes(color)) {
       return `po-${color}`;
     }
-
+    return color;
     return color.startsWith('#') ? color : `#${color}`;
   }
 

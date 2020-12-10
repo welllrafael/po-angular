@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { PoGaugeBaseComponent } from './po-gauge-base.component';
 import { ColorService } from './services/color.service';
@@ -7,10 +7,12 @@ import { ColorService } from './services/color.service';
   selector: 'po-gauge',
   templateUrl: './po-gauge.component.html'
 })
-export class PoGaugeComponent extends PoGaugeBaseComponent implements OnInit {
+export class PoGaugeComponent extends PoGaugeBaseComponent {
   constructor(protected colorService: ColorService) {
     super(colorService);
   }
 
-  ngOnInit(): void {}
+  get hasRanges(): boolean {
+    return this.ranges.length > 0;
+  }
 }

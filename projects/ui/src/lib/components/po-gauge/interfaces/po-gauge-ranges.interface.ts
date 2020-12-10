@@ -7,10 +7,10 @@
  */
 export interface PoGaugeRanges {
   /** Alcance inicial da cor. */
-  from?: string;
+  from?: number;
 
   /** Alcance final da cor. */
-  to?: string;
+  to?: number;
 
   /**
    * @description

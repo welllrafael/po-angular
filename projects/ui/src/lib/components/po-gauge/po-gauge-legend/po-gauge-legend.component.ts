@@ -7,12 +7,14 @@ import { PoGaugeRanges } from '../interfaces/po-gauge-ranges.interface';
   templateUrl: './po-gauge-legend.component.html'
 })
 export class PoGaugeLegendComponent {
-  private _ranges: Array<PoGaugeRanges> = [];
+  private _ranges: Array<PoGaugeRanges>;
 
   colors: Array<string> = [];
 
   @Input('p-ranges') set ranges(value: Array<PoGaugeRanges>) {
-    this._ranges = value;
+    if (value.length) {
+      this._ranges = this.filterLabel(value);
+    }
   }
 
   get ranges() {
@@ -20,4 +22,12 @@ export class PoGaugeLegendComponent {
   }
 
   constructor() {}
+
+  trackBy(index) {
+    return index;
+  }
+
+  private filterLabel(ranges: Array<PoGaugeRanges>) {
+    return ranges.filter(range => range.label);
+  }
 }
