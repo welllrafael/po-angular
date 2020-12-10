@@ -60,7 +60,13 @@ export abstract class PoGaugeBaseComponent {
     return this._height;
   }
 
-  /** Definição de alcance das cores. */
+  /**
+   * @optional
+   *
+   * @description
+   *
+   * Definição para alcances das cores.
+   */
   @Input('p-ranges') set ranges(value: Array<PoGaugeRanges>) {
     if (Array.isArray(value)) {
       this._ranges = this.verifyColors(value);
