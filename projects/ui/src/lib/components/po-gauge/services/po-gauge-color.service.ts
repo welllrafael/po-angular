@@ -10,7 +10,7 @@ const poGaugeColors = (<any>Object).values(PoColorPaletteEnum);
 @Injectable({
   providedIn: 'root'
 })
-export class ColorService {
+export class PoGaugeColorService {
   defaultColors: Array<string> = [];
 
   /**

@@ -3,7 +3,7 @@ import { EventEmitter, Input, Directive } from '@angular/core';
 import { convertToInt, isTypeof } from '../../utils/util';
 
 import { PoGaugeRanges } from './interfaces/po-gauge-ranges.interface';
-import { ColorService } from './services/color.service';
+import { PoGaugeColorService } from './services/po-gauge-color.service';
 
 const poGaugeMinHeight = 200;
 
@@ -95,7 +95,7 @@ export abstract class PoGaugeBaseComponent {
     return this._value;
   }
 
-  constructor(protected colorService: ColorService) {}
+  constructor(protected colorService: PoGaugeColorService) {}
 
   private verifyColors(ranges: Array<PoGaugeRanges>) {
     return this.colorService.getColors(ranges);

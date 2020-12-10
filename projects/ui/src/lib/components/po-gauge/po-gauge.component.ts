@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 
 import { PoGaugeBaseComponent } from './po-gauge-base.component';
-import { ColorService } from './services/color.service';
+import { PoGaugeColorService } from './services/po-gauge-color.service';
 
 @Component({
   selector: 'po-gauge',
   templateUrl: './po-gauge.component.html'
 })
 export class PoGaugeComponent extends PoGaugeBaseComponent {
-  constructor(protected colorService: ColorService) {
+  constructor(protected colorService: PoGaugeColorService) {
     super(colorService);
   }
 
