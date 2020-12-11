@@ -1,11 +1,10 @@
-import { EventEmitter, Input, Directive } from '@angular/core';
+import { Input, Directive } from '@angular/core';
 
-import { convertToInt, isTypeof } from '../../utils/util';
+import { convertToInt } from '../../utils/util';
+import { poGaugeMinHeight } from './po-gauge-default-values.constant';
 
-import { PoGaugeRanges } from './interfaces/po-gauge-ranges.interface';
 import { PoGaugeColorService } from './services/po-gauge-color.service';
-
-const poGaugeMinHeight = 200;
+import { PoGaugeRanges } from './interfaces/po-gauge-ranges.interface';
 
 /**
  * @description
@@ -17,7 +16,6 @@ const poGaugeMinHeight = 200;
  */
 @Directive()
 export abstract class PoGaugeBaseComponent {
-  private _description: string;
   private _height: number = poGaugeMinHeight;
   private _ranges: Array<PoGaugeRanges> = [];
   private _value: number;
@@ -30,16 +28,8 @@ export abstract class PoGaugeBaseComponent {
    * Designa o texto que será exibido no gauge.
    *
    * > Caso o conteúdo ultrapasse o tamanho disponível, será gerado automaticamente reticências, porém será possível visualizar a mensagem através de um tooltip no passar do mouse sobre o texto.
-   *
-   * @default `200px`
    */
-  @Input('p-description') set description(value: string) {
-    this._description = value;
-  }
-
-  get description(): string {
-    return this._description;
-  }
+  @Input('p-description') description: string;
 
   /**
    * @optional

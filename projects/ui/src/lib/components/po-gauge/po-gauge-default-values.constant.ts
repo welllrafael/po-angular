@@ -1,3 +1,6 @@
+// Altura mínima aceita pelo po-gauge.
+export const poGaugeMinHeight = 200;
+
 // Chamado de coroa circular, refere-se à área entre os círculos externos e internos e que define a espessura do gauge.
 export const PoGaugeThickness = 16;
 
